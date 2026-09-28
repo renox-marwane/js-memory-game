@@ -1,0 +1,16 @@
+#result{
+
+}
+
+.card{
+    width: 150px;
+    height: 150px;
+    background-color: lightcoral;
+    cursor:pointer;
+}
+#game-board{
+    display: grid;
+    grid-template-columns: repeat(4,150px);
+    gap: 10px 20px;
+
+}
