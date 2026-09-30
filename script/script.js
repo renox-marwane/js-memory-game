@@ -5,7 +5,11 @@ let secondCard = null;
 let lockBoard = false;//verouillage de porte 
 let moves = 0;
 let matchedCount=0;
-const recommenncer=document.getElementById("retour");
+let seconde=0;
+let timerInterval=null;
+const timerDisplay = document.getElementById('temps');
+const recommencer=document.getElementById("retour");
+const resultat = document.getElementById("result");
 var random  = Math.random();
 
 var imgStart = Math.floor(random*100) +1;
@@ -29,6 +33,17 @@ for (let i =1;i<=8;i++){
     }
    // console.log(`test ${dimension}`);
     function initGame(){
+        firstCard = null;
+        secondCard = null;
+        lockBoard = false;
+        gameBoard.innerHTML='';
+        moves=0
+        matchedCount=0
+        seconde=0;
+        timerDisplay.textContent=formatTime(0);
+        resultat.textContent='';
+        clearInterval(timerInterval)
+
         shuffle(cards);
         cards.forEach(imgUrl => {
         const card=document.createElement('div');
@@ -36,9 +51,10 @@ for (let i =1;i<=8;i++){
         card.dataset.value=imgUrl;
         card.setAttribute('role','button');
         card.setAttribute('tabindex','0');
-         card.addEventListener('click', () => handleCardClick(card));
+        card.addEventListener('click', () => handleCardClick(card));
         gameBoard.appendChild(card);
     });
+    startTimer();
 }
 function handleCardClick(card){
     if(lockBoard){
@@ -76,6 +92,7 @@ function handleCardClick(card){
         firstCard=null;
         secondCard=null;
         lockBoard=false;
+        checkVictory();
         
     }
     else{
@@ -89,11 +106,29 @@ function handleCardClick(card){
         }, 800);
     }
  }
-recommenncer.addEventListener('click',()=>{
-    gameBoard.innerHTML='';
-    moves=0
-    matchedCount=0
-    initGame();
-
+recommencer.addEventListener('click',()=>{
+   initGame();
 });
+function formatTime(sec){
+    let mm = 0
+    mm=Math.floor(sec/60);
+    let ss= sec%60
+    return String(mm).padStart(2,'0')  + ':'+ String(ss).padStart(2,'0')
+}
+function startTimer(){
+    timerInterval=setInterval(()=>{
+        seconde++;
+        timerDisplay.textContent=formatTime(seconde);
+    },1000);
+}
+function checkVictory(){
+    if(matchedCount=== cards.length/2){
+        clearInterval(timerInterval);
+        resultat.textContent='Gagné en ' + moves + ' coup !';
+    }
+
+
+}
+
+
 initGame();
